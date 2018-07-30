@@ -3,11 +3,14 @@
 
 #define PIN 6
 #define NUMPIXELS 16
+#define BRIGHTNESS A7
+#define HUE A6
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 int hueVal = 0;
 int newHueVal = 0;
+
 float brightnessVal = 0;
 
 void setup() {
@@ -15,8 +18,8 @@ void setup() {
 }
 
 void loop() {
-  newHueVal = map(analogRead(A6), 0, 1024, 0, 360);
-  brightnessVal = analogRead(A7)/1024.0;
+  newHueVal = map(analogRead(HUE), 0, 1024, 0, 360);
+  brightnessVal = analogRead(BRIGHTNESS)/1024.0;
 
   if (newHueVal > hueVal + 6 || newHueVal < hueVal - 6) {
     hueVal = newHueVal;
