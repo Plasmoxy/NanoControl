@@ -21,6 +21,10 @@ int newBrightnessVal = 0;
 float brightnessVal = 0;
 bool sleeping = false;
 
+// direct pixel rgb vals
+int directPixels[3*16] = {0};
+bool directPixelsEnabled = false;
+
 void setPixels(int r, int g, int b) {
   uint32_t color = pixels.Color(r, g, b); // pack to 32bit RGB
   for (int i = 0; i < NUMPIXELS; i++) {
@@ -29,12 +33,47 @@ void setPixels(int r, int g, int b) {
   pixels.show();
 }
 
+String getValue(String data, char separator, int index)
+{
+    int found = 0;
+    int strIndex[] = { 0, -1 };
+    int maxIndex = data.length() - 1;
+
+    for (int i = 0; i <= maxIndex && found <= index; i++) {
+        if (data.charAt(i) == separator || i == maxIndex) {
+            found++;
+            strIndex[0] = strIndex[1] + 1;
+            strIndex[1] = (i == maxIndex) ? i+1 : i;
+        }
+    }
+    return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
 void handleRoot() {
   server.send(200, "text/plain", "RUNNING");
 }
 
 void handleSet() {
-  hueVal = server.arg("hue").toInt();
+
+  if (server.arg("direct") != NULL) {
+    directPixelsEnabled = server.arg("direct") == "true";
+  }
+
+  if (server.arg("pixels") != NULL) {
+    Serial.println("Pixels loading");
+    Serial.println(server.arg("pixels"));
+
+    // KOKOT
+    for (int i = 0; i < 3*16; i++) {
+      directPixels[i] = getValue(server.arg("pixels"), '.', i).toInt();
+      Serial.println(directPixels[i]);
+    }
+  }
+
+  if (server.arg("hue") != NULL) {
+    hueVal = server.arg("hue").toInt();
+  }
+  
   server.send(200, "text/plain", "OK");
 }
 
@@ -90,7 +129,14 @@ void loop() {
   int* rgb = hsvToRgb(hueVal, 1.0, brightnessVal);
 
   // set values on pixels
-  setPixels(rgb[0], rgb[1], rgb[2]);
+  if (directPixelsEnabled) {
+    for (int i = 0; i < 16; i++) {
+      pixels.setPixelColor(i, pixels.Color(directPixels[3*i], directPixels[3*i+1], directPixels[3*i+2]));
+    }
+    pixels.show();
+  } else {
+    setPixels(rgb[0], rgb[1], rgb[2]);
+  }
 
   // some smoothing delay
   delay(1000);
