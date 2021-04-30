@@ -131,7 +131,7 @@ void loop() {
   // set values on pixels
   if (directPixelsEnabled) {
     for (int i = 0; i < 16; i++) {
-      pixels.setPixelColor(i, pixels.Color(directPixels[3*i], directPixels[3*i+1], directPixels[3*i+2]));
+      pixels.setPixelColor(i, pixels.Color(brightnessVal*directPixels[3*i], brightnessVal*directPixels[3*i+1], brightnessVal*directPixels[3*i+2]));
     }
     pixels.show();
   } else {
