@@ -8,6 +8,7 @@
 #include <Adafruit_NeoPixel.h>
 #include "hsvcolors.h"
 #include "wifi_password.h" // assign ssid and password char* vars
+#include "page.h"
 
 // pins
 #define PIN D2
@@ -34,6 +35,14 @@ void setPixels(int r, int g, int b) {
   pixels.show();
 }
 
+String IpAddress2String(const IPAddress& ipAddress)
+{
+    return String(ipAddress[0]) + String(".") +
+           String(ipAddress[1]) + String(".") +
+           String(ipAddress[2]) + String(".") +
+           String(ipAddress[3]);
+}
+
 String getValue(String data, char separator, int index)
 {
     int found = 0;
@@ -55,7 +64,7 @@ void handleRoot() {
   server.sendHeader("Access-Control-Max-Age", "10000");
   server.sendHeader("Access-Control-Allow-Methods", "PUT,POST,GET,OPTIONS");
   server.sendHeader("Access-Control-Allow-Headers", "*");
-  server.send(200, "text/plain", "RUNNING");
+  server.send(200, "text/html", getPage(IpAddress2String(WiFi.localIP())));
 }
 
 void handleSet() {
