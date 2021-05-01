@@ -1,0 +1,105 @@
+<html>
+  
+  <head>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+    
+    <style>
+      body {
+        color: white;
+        background: black;
+      }
+      
+      img {
+        border-radius: 30px;
+      }
+      
+      img:hover {
+        cursor: pointer;
+      }
+      
+      .cd {
+        
+      }
+      
+      .form-control-inline {
+          min-width: 0;
+          width: auto;
+          display: inline;
+      }
+    </style>
+    
+  </head>
+  
+  <body>  
+    <div class="container mt-5">
+      <h1>Pixel lampen</h1>
+      <div class="row mt-5">
+        <div id="vapor" class="col-sm-6 col-md-4">
+          <img src="https://i.pinimg.com/originals/1e/82/e3/1e82e334b913b2d84477dc893b541049.jpg" width="100%">
+        </div>
+        <div id="aqua" class="col-sm-6 col-md-4">
+          <img src="https://i.pinimg.com/originals/e0/f1/3b/e0f13b76001f816f6914fb2e758e038c.jpg" width="100%">
+        </div>
+        
+        <div id="outrun" class="col-sm-6 col-md-4">
+          <img src="https://i.pinimg.com/564x/00/e5/6c/00e56ca9f37d9bdadcdb8005fe9bb894.jpg" width="100%">
+        </div>
+      </div>
+      
+      <div class="mt-5">
+        <h2>Set kolore:</h2>
+        <input id="fr" type="text" class="form-control form-control-inline">
+        <input id="fg" type="text" class="form-control form-control-inline">
+        <input id="fb" type="text" class="form-control form-control-inline">
+        <br>
+        <input id="sr" type="text" class="form-control form-control-inline">
+        <input id="sg" type="text" class="form-control form-control-inline">
+        <input id="sb" type="text" class="form-control form-control-inline">
+        <br>
+        <button class="btn btn-primary" id="setkolore">SET</button>
+      </div>
+      
+     </div>
+    <script>
+      
+      function kolore(fr, fg, fb, sr, sg, sb) {
+        let s="";
+        for (let i = 0; i < 8; i++) {
+            s += `${fr}.${fg}.${fb}.`;
+        }
+        for (let i = 0; i < 8; i++) {
+            s += `${sr}.${sg}.${sb}.`;
+        }
+        s.length--;
+        fetch("http://192.168.1.23/set?direct=true&pixels=" + s);
+      }
+      
+      $("#vapor").click(() => {
+        kolore(0, 255, 230, 255, 0, 221)
+      })
+      
+      $("#outrun").click(() => {
+        kolore(158,0,255, 255,0,82)
+      })
+      
+      $("#aqua").click(() => {
+        kolore(0, 255, 230, 0, 255, 230)
+      })
+      
+      
+      $("#setkolore").click(() => {
+        kolore(
+          Number($("#fr").val()),Number($("#fg").val()),Number($("#fb").val()),
+          Number($("#fr").val()),Number($("#fg").val()),Number($("#fb").val()),
+        )
+      })
+      
+      
+    </script>
+  </body>
+</html>

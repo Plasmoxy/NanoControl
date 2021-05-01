@@ -1,5 +1,6 @@
 // rili frikin cool potentiometer rgb controller for neopixels ;))) by Plasmoxy
 // MOD 2021 FOR WEMOS D1
+
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -50,6 +51,10 @@ String getValue(String data, char separator, int index)
 }
 
 void handleRoot() {
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.sendHeader("Access-Control-Max-Age", "10000");
+  server.sendHeader("Access-Control-Allow-Methods", "PUT,POST,GET,OPTIONS");
+  server.sendHeader("Access-Control-Allow-Headers", "*");
   server.send(200, "text/plain", "RUNNING");
 }
 
@@ -73,7 +78,11 @@ void handleSet() {
   if (server.arg("hue") != NULL) {
     hueVal = server.arg("hue").toInt();
   }
-  
+
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.sendHeader("Access-Control-Max-Age", "10000");
+  server.sendHeader("Access-Control-Allow-Methods", "PUT,POST,GET,OPTIONS");
+  server.sendHeader("Access-Control-Allow-Headers", "*");
   server.send(200, "text/plain", "OK");
 }
 
