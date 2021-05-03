@@ -1,6 +1,5 @@
 // rili frikin cool potentiometer rgb controller for neopixels ;))) by Plasmoxy
 // MOD 2021 FOR WEMOS D1
-
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -24,8 +23,8 @@ float brightnessVal = 0;
 bool sleeping = false;
 
 // direct pixel rgb vals
-int directPixels[3*16] = {0};
-bool directPixelsEnabled = false;
+int directPixels[3*16] = {0, 255, 230, 0, 255, 230, 0, 255, 230, 0, 255, 230, 0, 255, 230, 0, 255, 230, 0, 255, 230, 0, 255, 230, 255, 0, 221, 255, 0, 221, 255, 0, 221, 255, 0, 221, 255, 0, 221, 255, 0, 221, 255, 0, 221, 255, 0, 221};
+bool directPixelsEnabled = true;
 
 void setPixels(int r, int g, int b) {
   uint32_t color = pixels.Color(r, g, b); // pack to 32bit RGB
@@ -79,8 +78,7 @@ void handleSet() {
 
     // KOKOT
     for (int i = 0; i < 3*16; i++) {
-      directPixels[i] = getValue(server.arg("pixels"), '.', i).toInt();
-      Serial.println(directPixels[i]);
+      directPixels[i] = (byte) getValue(server.arg("pixels"), '.', i).toInt();
     }
   }
 
@@ -96,9 +94,12 @@ void handleSet() {
 }
 
 void setup() {
+  
   pixels.begin();
   Serial.begin(9600);
   pinMode(A0, INPUT);
+
+  delay(1000);
 
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
